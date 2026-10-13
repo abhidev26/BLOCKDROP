@@ -701,3 +701,164 @@ initializeGame();
 requestAnimationFrame(loop);
 
 console.log("BLOCKDROP Commit 12 loaded successfully.");
+
+/* ==========================================
+   COMMIT 13 — PLAYER STATISTICS DASHBOARD
+========================================== */
+
+(() => {
+  "use strict";
+
+  const STORAGE_KEY = "blockdrop_lifetime";
+  const HISTORY_KEY = "blockdrop_game_history";
+
+  const get = id => document.getElementById(id);
+
+  function readJSON(key, fallback) {
+    try {
+      const value = JSON.parse(localStorage.getItem(key));
+      return value ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function getHistory() {
+    const history = readJSON(HISTORY_KEY, []);
+    return Array.isArray(history) ? history : [];
+  }
+
+  function getLifetime() {
+    const stats = readJSON(STORAGE_KEY, {});
+    return {
+      games: Number(stats.games) || 0,
+      lines: Number(stats.lines) || 0,
+      best: Number(stats.best) || 0
+    };
+  }
+
+  function renderStatistics() {
+    const history = getHistory();
+    const lifetime = getLifetime();
+
+    const totalGames = Math.max(lifetime.games, history.length);
+    const totalLines = lifetime.lines;
+    const historicalBest = Math.max(
+      lifetime.best,
+      ...history.map(game => Number(game.score) || 0),
+      0
+    );
+
+    const historyTotal = history.reduce(
+      (sum, game) => sum + (Number(game.score) || 0),
+      0
+    );
+
+    // Lifetime best is retained even when older games have no history.
+    const averageScore = totalGames > 0
+      ? Math.round(
+          (historyTotal +
+            Math.max(0, totalGames - history.length) * 0) /
+          totalGames
+        )
+      : 0;
+
+    if (get("totalGames")) {
+      get("totalGames").textContent = totalGames.toLocaleString();
+    }
+
+    if (get("lifetimeBest")) {
+      get("lifetimeBest").textContent = historicalBest.toLocaleString();
+    }
+
+    if (get("totalLines")) {
+      get("totalLines").textContent = totalLines.toLocaleString();
+    }
+
+    if (get("averageScore")) {
+      get("averageScore").textContent = averageScore.toLocaleString();
+    }
+
+    updateMilestone(historicalBest);
+  }
+
+  function updateMilestone(bestScore) {
+    const milestones = [
+      { score: 1000, title: "Score Hunter" },
+      { score: 5000, title: "Block Master" },
+      { score: 10000, title: "Arcade Legend" },
+      { score: 25000, title: "BLOCKDROP Champion" }
+    ];
+
+    const next = milestones.find(item => bestScore < item.score);
+
+    const title = get("milestoneTitle");
+    const progress = get("milestoneProgress");
+    const bar = get("milestoneBar");
+    const message = get("milestoneMessage");
+
+    if (!next) {
+      if (title) title.textContent = "BLOCKDROP Champion";
+      if (progress) progress.textContent = "MAX LEVEL";
+      if (bar) bar.style.width = "100%";
+      if (message) message.textContent = "Amazing! You have reached the highest displayed milestone.";
+      return;
+    }
+
+    const previous = milestones[milestones.indexOf(next) - 1]?.score || 0;
+    const progressAmount = Math.max(
+      0,
+      Math.min(100, ((bestScore - previous) / (next.score - previous)) * 100)
+    );
+
+    if (title) title.textContent = next.title;
+    if (progress) {
+      progress.textContent =
+        `${bestScore.toLocaleString()} / ${next.score.toLocaleString()}`;
+    }
+    if (bar) bar.style.width = `${progressAmount}%`;
+    if (message) {
+      message.textContent =
+        `${Math.max(0, next.score - bestScore).toLocaleString()} more points to reach your next milestone.`;
+    }
+  }
+
+  function recordStatistics(score, lines) {
+    const lifetime = getLifetime();
+
+    lifetime.games += 1;
+    lifetime.lines += Number(lines) || 0;
+    lifetime.best = Math.max(lifetime.best, Number(score) || 0);
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(lifetime));
+
+    const history = getHistory();
+    history.push({
+      score: Number(score) || 0,
+      lines: Number(lines) || 0,
+      date: new Date().toISOString()
+    });
+
+    // Keep the latest 500 games to prevent unlimited storage growth.
+    localStorage.setItem(
+      HISTORY_KEY,
+      JSON.stringify(history.slice(-500))
+    );
+
+    renderStatistics();
+  }
+
+  // Public hook for the actual game-over function to call.
+  window.blockdropRecordStatistics = recordStatistics;
+  window.blockdropRefreshStatistics = renderStatistics;
+
+  const refreshButton = get("refreshStatsBtn");
+  if (refreshButton) {
+    refreshButton.addEventListener("click", renderStatistics);
+  }
+
+  renderStatistics();
+
+  console.log("BLOCKDROP Commit 13 statistics dashboard loaded.");
+})();
+

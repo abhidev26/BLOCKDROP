@@ -153,6 +153,70 @@
     <footer>
       BLOCKDROP <span>·</span> BUILT TO PLAY
     </footer>
-  </main>
+    
+<!-- COMMIT 13: PLAYER STATISTICS DASHBOARD -->
+<section class="stats-dashboard panel">
+  <div class="stats-header">
+    <div>
+      <p class="eyebrow">PLAYER ANALYTICS</p>
+      <h2>Statistics Dashboard</h2>
+      <p class="muted">Your BLOCKDROP journey at a glance.</p>
+    </div>
+    <span class="stats-live">● TRACKING</span>
+  </div>
+
+  <div class="stats-cards">
+    <article class="analytics-card">
+      <span class="analytics-icon">🎮</span>
+      <span class="analytics-label">GAMES PLAYED</span>
+      <strong id="totalGames">0</strong>
+    </article>
+
+    <article class="analytics-card">
+      <span class="analytics-icon">✦</span>
+      <span class="analytics-label">HIGHEST SCORE</span>
+      <strong id="lifetimeBest">0</strong>
+    </article>
+
+    <article class="analytics-card">
+      <span class="analytics-icon">▦</span>
+      <span class="analytics-label">LINES CLEARED</span>
+      <strong id="totalLines">0</strong>
+    </article>
+
+    <article class="analytics-card">
+      <span class="analytics-icon">↗</span>
+      <span class="analytics-label">AVERAGE SCORE</span>
+      <strong id="averageScore">0</strong>
+    </article>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-heading">
+      <div>
+        <span class="analytics-label">NEXT MILESTONE</span>
+        <h3 id="milestoneTitle">Score Hunter</h3>
+      </div>
+      <strong id="milestoneProgress">0 / 1000</strong>
+    </div>
+
+    <div class="progress-track">
+      <div id="milestoneBar" class="progress-fill"></div>
+    </div>
+
+    <p id="milestoneMessage" class="muted">
+      Score 1,000 points in a game to reach your first milestone.
+    </p>
+  </div>
+
+  <div class="stats-footer">
+    <span>Personal best across completed games</span>
+    <button id="refreshStatsBtn" class="secondary-btn" type="button">
+      ↻ Refresh Stats
+    </button>
+  </div>
+</section>
+<!-- END COMMIT 13 -->
+</main>
 </body>
 </html>

@@ -341,3 +341,180 @@ footer span { color: var(--cyan); }
   .sidebar { grid-template-columns: 1fr; }
   .game-actions { flex-direction: column; }
 }
+
+/* COMMIT 13 — STATISTICS DASHBOARD */
+
+.stats-dashboard {
+  margin-top: 24px;
+  overflow: hidden;
+}
+
+.stats-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.stats-header h2 {
+  margin: 0;
+  font-size: clamp(21px, 3vw, 28px);
+  letter-spacing: -0.7px;
+}
+
+.stats-header .eyebrow {
+  margin: 0 0 9px;
+}
+
+.stats-header .muted {
+  margin: 8px 0 0;
+}
+
+.stats-live {
+  flex-shrink: 0;
+  padding: 7px 10px;
+  color: #67e8f9;
+  background: rgba(34, 211, 238, 0.09);
+  border: 1px solid rgba(103, 232, 249, 0.2);
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.analytics-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 17px 14px;
+  background: rgba(7, 13, 28, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 14px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.analytics-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(103, 232, 249, 0.4);
+}
+
+.analytics-icon {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  margin-bottom: 15px;
+  color: #67e8f9;
+  background: rgba(103, 232, 249, 0.1);
+  border-radius: 10px;
+  font-size: 17px;
+}
+
+.analytics-label {
+  color: #92a0bb;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1.6;
+}
+
+.analytics-card strong {
+  margin-top: 7px;
+  color: #f1f5ff;
+  font-size: clamp(20px, 2.5vw, 29px);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.progress-section {
+  margin-top: 24px;
+  padding: 19px;
+  background: rgba(7, 13, 28, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.13);
+  border-radius: 14px;
+}
+
+.progress-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.progress-heading h3 {
+  margin: 5px 0 0;
+  font-size: 17px;
+}
+
+.progress-heading > strong {
+  color: #67e8f9;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.progress-track {
+  width: 100%;
+  height: 9px;
+  overflow: hidden;
+  background: #1c2940;
+  border-radius: 20px;
+}
+
+.progress-fill {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #22d3ee, #a78bfa);
+  box-shadow: 0 0 15px rgba(103, 232, 249, 0.3);
+  transition: width 0.45s ease;
+}
+
+.progress-section > .muted {
+  margin: 12px 0 0;
+  font-size: 12px;
+}
+
+.stats-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+  color: #92a0bb;
+  font-size: 11px;
+}
+
+@media (max-width: 650px) {
+  .stats-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 380px) {
+  .stats-header {
+    flex-direction: column;
+  }
+
+  .analytics-card {
+    padding: 13px 10px;
+  }
+
+  .progress-section {
+    padding: 14px;
+  }
+
+  .progress-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
