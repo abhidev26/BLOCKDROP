@@ -217,6 +217,74 @@
   </div>
 </section>
 <!-- END COMMIT 13 -->
+<section class="daily-challenges" id="dailyChallenges">
+  <div class="daily-header">
+    <div>
+      <p class="daily-eyebrow">YOUR NEXT MISSION</p>
+      <h2>Daily Challenges</h2>
+      <p class="daily-subtitle">Complete missions to earn bonus XP.</p>
+    </div>
+    <div class="daily-date" id="dailyDate">TODAY</div>
+  </div>
+
+  <div class="daily-xp-card">
+    <div>
+      <span>Total Challenge XP</span>
+      <strong id="dailyTotalXP">0 XP</strong>
+    </div>
+    <span class="daily-trophy">🏆</span>
+  </div>
+
+  <div class="daily-challenge-list">
+    <article class="daily-challenge-card" id="challengeScore">
+      <div class="challenge-icon">🎯</div>
+      <div class="challenge-info">
+        <h3>Score Hunter</h3>
+        <p>Earn 2,500 total points today.</p>
+        <div class="challenge-progress-track">
+          <div class="challenge-progress-fill" id="scoreProgressBar"></div>
+        </div>
+        <small id="scoreProgressText">0 / 2,500 points</small>
+      </div>
+      <div class="challenge-reward">
+        <span>+100 XP</span>
+        <button id="claimScoreReward" disabled>Locked</button>
+      </div>
+    </article>
+
+    <article class="daily-challenge-card" id="challengeLines">
+      <div class="challenge-icon">🧱</div>
+      <div class="challenge-info">
+        <h3>Line Master</h3>
+        <p>Clear 10 lines today.</p>
+        <div class="challenge-progress-track">
+          <div class="challenge-progress-fill" id="linesProgressBar"></div>
+        </div>
+        <small id="linesProgressText">0 / 10 lines</small>
+      </div>
+      <div class="challenge-reward">
+        <span>+150 XP</span>
+        <button id="claimLinesReward" disabled>Locked</button>
+      </div>
+    </article>
+
+    <article class="daily-challenge-card" id="challengeGames">
+      <div class="challenge-icon">🎮</div>
+      <div class="challenge-info">
+        <h3>Dedicated Player</h3>
+        <p>Complete 3 games today.</p>
+        <div class="challenge-progress-track">
+          <div class="challenge-progress-fill" id="gamesProgressBar"></div>
+        </div>
+        <small id="gamesProgressText">0 / 3 games</small>
+      </div>
+      <div class="challenge-reward">
+        <span>+200 XP</span>
+        <button id="claimGamesReward" disabled>Locked</button>
+      </div>
+    </article>
+  </div>
+</section>
 </main>
 </body>
 </html>

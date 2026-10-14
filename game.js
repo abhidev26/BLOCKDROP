@@ -862,3 +862,195 @@ console.log("BLOCKDROP Commit 12 loaded successfully.");
   console.log("BLOCKDROP Commit 13 statistics dashboard loaded.");
 })();
 
+/* COMMIT 14 — DAILY CHALLENGES SYSTEM */
+
+(() => {
+  "use strict";
+
+  const STORAGE_KEY = "blockdrop_daily_challenges_v1";
+  const XP_KEY = "blockdrop_daily_challenge_xp_v1";
+
+  const challenges = [
+    {
+      id: "score",
+      goal: 2500,
+      reward: 100,
+      bar: "scoreProgressBar",
+      text: "scoreProgressText",
+      button: "claimScoreReward",
+      card: "challengeScore",
+      label: "points"
+    },
+    {
+      id: "lines",
+      goal: 10,
+      reward: 150,
+      bar: "linesProgressBar",
+      text: "linesProgressText",
+      button: "claimLinesReward",
+      card: "challengeLines",
+      label: "lines"
+    },
+    {
+      id: "games",
+      goal: 3,
+      reward: 200,
+      bar: "gamesProgressBar",
+      text: "gamesProgressText",
+      button: "claimGamesReward",
+      card: "challengeGames",
+      label: "games"
+    }
+  ];
+
+  function todayKey() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  function freshState() {
+    return {
+      date: todayKey(),
+      totalScore: 0,
+      totalLines: 0,
+      games: 0,
+      claimed: []
+    };
+  }
+
+  function readState() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+      if (!saved || saved.date !== todayKey()) {
+        return freshState();
+      }
+
+      return {
+        ...freshState(),
+        ...saved,
+        claimed: Array.isArray(saved.claimed) ? saved.claimed : []
+      };
+    } catch {
+      return freshState();
+    }
+  }
+
+  function saveState(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function getProgress(state, challenge) {
+    if (challenge.id === "score") return state.totalScore;
+    if (challenge.id === "lines") return state.totalLines;
+    return state.games;
+  }
+
+  function getTotalXP() {
+    return Number(localStorage.getItem(XP_KEY)) || 0;
+  }
+
+  function render() {
+    const state = readState();
+    const dateElement = document.getElementById("dailyDate");
+    const xpElement = document.getElementById("dailyTotalXP");
+
+    if (!dateElement || !xpElement) return;
+
+    dateElement.textContent = state.date;
+    xpElement.textContent = `${getTotalXP()} XP`;
+
+    challenges.forEach((challenge) => {
+      const progress = getProgress(state, challenge);
+      const completed = progress >= challenge.goal;
+      const claimed = state.claimed.includes(challenge.id);
+
+      const bar = document.getElementById(challenge.bar);
+      const text = document.getElementById(challenge.text);
+      const button = document.getElementById(challenge.button);
+      const card = document.getElementById(challenge.card);
+
+      if (!bar || !text || !button || !card) return;
+
+      const percentage = Math.min(
+        100,
+        (progress / challenge.goal) * 100
+      );
+
+      bar.style.width = `${percentage}%`;
+      text.textContent =
+        `${Math.min(progress, challenge.goal).toLocaleString()} / ` +
+        `${challenge.goal.toLocaleString()} ${challenge.label}`;
+
+      card.classList.toggle("completed", completed);
+
+      button.disabled = !completed || claimed;
+      button.classList.toggle("claimed", claimed);
+
+      button.textContent = claimed
+        ? "Claimed ✓"
+        : completed
+          ? "Claim XP"
+          : "Locked";
+    });
+  }
+
+  function recordResult(score, lines, message) {
+    // Do not count games ended by switching modes or restarting.
+    const reason = String(message || "").toLowerCase();
+
+    if (
+      reason.includes("mode changed") ||
+      reason.includes("restart") ||
+      reason.includes("reset")
+    ) {
+      return;
+    }
+
+    const state = readState();
+
+    state.totalScore += Math.max(0, Number(score) || 0);
+    state.totalLines += Math.max(0, Number(lines) || 0);
+    state.games += 1;
+
+    saveState(state);
+    render();
+  }
+
+  challenges.forEach((challenge) => {
+    const button = document.getElementById(challenge.button);
+
+    if (!button) return;
+
+    button.addEventListener("click", () => {
+      const state = readState();
+      const progress = getProgress(state, challenge);
+
+      if (
+        progress < challenge.goal ||
+        state.claimed.includes(challenge.id)
+      ) {
+        return;
+      }
+
+      state.claimed.push(challenge.id);
+      localStorage.setItem(
+        XP_KEY,
+        String(getTotalXP() + challenge.reward)
+      );
+
+      saveState(state);
+      render();
+    });
+  });
+
+  window.blockdropRecordDailyChallenge = recordResult;
+  window.blockdropRefreshDailyChallenges = render;
+
+  render();
+})();
+
+
