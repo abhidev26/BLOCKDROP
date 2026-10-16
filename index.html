@@ -285,6 +285,48 @@
     </article>
   </div>
 </section>
+
+<!-- COMMIT 15: POWER-UP CONTROLS -->
+<section class="powerup-panel" id="powerupPanel">
+  <div class="powerup-heading">
+    <div>
+      <p class="powerup-eyebrow">SPECIAL ABILITIES</p>
+      <h2>Power-Ups</h2>
+    </div>
+    <span class="powerup-badge">3 POWERS</span>
+  </div>
+
+  <p class="powerup-description">
+    Activate special abilities during your game.
+  </p>
+
+  <div class="powerup-grid">
+    <button class="powerup-card" id="bombPower" type="button">
+      <span class="powerup-icon">💣</span>
+      <span class="powerup-name">Bomb Blast</span>
+      <span class="powerup-detail">Clear nearby blocks</span>
+      <span class="powerup-count" id="bombCount">2 available</span>
+    </button>
+
+    <button class="powerup-card" id="linePower" type="button">
+      <span class="powerup-icon">⚡</span>
+      <span class="powerup-name">Line Clear</span>
+      <span class="powerup-detail">Clear the lowest row</span>
+      <span class="powerup-count" id="lineCount">2 available</span>
+    </button>
+
+    <button class="powerup-card" id="freezePower" type="button">
+      <span class="powerup-icon">❄️</span>
+      <span class="powerup-name">Freeze Time</span>
+      <span class="powerup-detail">Slow falling blocks</span>
+      <span class="powerup-count" id="freezeCount">2 available</span>
+    </button>
+  </div>
+
+  <p class="powerup-status" id="powerupStatus" aria-live="polite">
+    Choose a power-up to activate it.
+  </p>
+</section>
 </main>
 </body>
 </html>

@@ -1051,6 +1051,284 @@ console.log("BLOCKDROP Commit 12 loaded successfully.");
   window.blockdropRefreshDailyChallenges = render;
 
   render();
+  
+/* COMMIT 15 — POWER-UP SYSTEM */
+
+(() => {
+  "use strict";
+
+  const powers = {
+    bomb: 2,
+    line: 2,
+    freeze: 2
+  };
+
+  const buttons = {
+    bomb: document.getElementById("bombPower"),
+    line: document.getElementById("linePower"),
+    freeze: document.getElementById("freezePower")
+  };
+
+  const countElements = {
+    bomb: document.getElementById("bombCount"),
+    line: document.getElementById("lineCount"),
+    freeze: document.getElementById("freezeCount")
+  };
+
+  const status = document.getElementById("powerupStatus");
+
+  if (!status || Object.values(buttons).some((button) => !button)) {
+    return;
+  }
+
+  let freezeTimeout = null;
+  let freezeActive = false;
+
+  function announce(message, type = "success") {
+    status.textContent = message;
+    status.className = "powerup-status";
+
+    if (type === "success") {
+      status.classList.add("powerup-success");
+    } else if (type === "error") {
+      status.classList.add("powerup-error");
+    }
+  }
+
+  function updateUI() {
+    Object.keys(powers).forEach((key) => {
+      countElements[key].textContent =
+        `${powers[key]} available`;
+
+      buttons[key].disabled = powers[key] <= 0;
+    });
+  }
+
+  function spendPower(key) {
+    if (powers[key] <= 0) {
+      announce("No uses left for this power-up.", "error");
+      return false;
+    }
+
+    powers[key] -= 1;
+    updateUI();
+    return true;
+  }
+
+  function getBoard() {
+    const board = window.board;
+    const cols = Number(window.COLS);
+    const rows = Number(window.ROWS);
+
+    if (
+      !Array.isArray(board) ||
+      !Number.isInteger(cols) ||
+      !Number.isInteger(rows) ||
+      cols <= 0 ||
+      rows <= 0 ||
+      board.length !== rows ||
+      board.some((row) => !Array.isArray(row) || row.length !== cols)
+    ) {
+      return null;
+    }
+
+    return { board, cols, rows };
+  }
+
+  function getOccupied(value) {
+    return value !== null &&
+      value !== undefined &&
+      value !== 0 &&
+      value !== false &&
+      value !== "";
+  }
+
+  function isPlaying() {
+    if (window.gameEnded === true) return false;
+    if (window.gameRunning === false) return false;
+    return true;
+  }
+
+  function bombBlast() {
+    const data = getBoard();
+
+    if (!data) {
+      announce(
+        "Bomb needs to be connected to your game's board variables.",
+        "error"
+      );
+      return;
+    }
+
+    const { board, cols, rows } = data;
+
+    // Find the highest occupied cell in the board.
+    let targetRow = -1;
+    let targetCol = -1;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (getOccupied(board[r][c])) {
+          targetRow = r;
+          targetCol = c;
+          break;
+        }
+      }
+
+      if (targetRow !== -1) break;
+    }
+
+    if (targetRow === -1) {
+      announce("There are no placed blocks to blast.", "error");
+      return;
+    }
+
+    if (!spendPower("bomb")) return;
+
+    let cleared = 0;
+
+    for (let r = Math.max(0, targetRow - 1);
+      r <= Math.min(rows - 1, targetRow + 1); r++) {
+      for (let c = Math.max(0, targetCol - 1);
+        c <= Math.min(cols - 1, targetCol + 1); c++) {
+        if (getOccupied(board[r][c])) {
+          board[r][c] = 0;
+          cleared++;
+        }
+      }
+    }
+
+    if (typeof window.drawBoard === "function") {
+      window.drawBoard();
+    } else if (typeof window.draw === "function") {
+      window.draw();
+    }
+
+    announce(`Bomb blast activated! ${cleared} cells cleared.`);
+  }
+
+  function clearBottomLine() {
+    const data = getBoard();
+
+    if (!data) {
+      announce(
+        "Line Clear needs to be connected to your game's board variables.",
+        "error"
+      );
+      return;
+    }
+
+    const { board, cols, rows } = data;
+    let targetRow = -1;
+
+    for (let r = rows - 1; r >= 0; r--) {
+      if (board[r].some(getOccupied)) {
+        targetRow = r;
+        break;
+      }
+    }
+
+    if (targetRow === -1) {
+      announce("There are no blocks on the board to clear.", "error");
+      return;
+    }
+
+    if (!spendPower("line")) return;
+
+    // Clear the lowest occupied row and move the rows above down.
+    board.splice(targetRow, 1);
+    board.unshift(Array(cols).fill(0));
+
+    if (typeof window.drawBoard === "function") {
+      window.drawBoard();
+    } else if (typeof window.draw === "function") {
+      window.draw();
+    }
+
+    announce("Line Clear activated! One row removed.");
+  }
+
+  function freezeTime() {
+    if (freezeActive) {
+      announce("Freeze Time is already active.", "error");
+      return;
+    }
+
+    if (typeof window.dropInterval !== "number") {
+      announce(
+        "Freeze needs to be connected to your game's falling-speed variable.",
+        "error"
+      );
+      return;
+    }
+
+    if (!spendPower("freeze")) return;
+
+    freezeActive = true;
+
+    const originalInterval = window.dropInterval;
+    window.dropInterval = Math.min(originalInterval * 2, 5000);
+
+    announce("Freeze Time activated! Blocks are falling slower.");
+
+    freezeTimeout = setTimeout(() => {
+      window.dropInterval = originalInterval;
+      freezeActive = false;
+      freezeTimeout = null;
+      announce("Freeze Time ended. Normal speed restored.");
+    }, 5000);
+  }
+
+  buttons.bomb.addEventListener("click", () => {
+    if (!isPlaying()) {
+      announce("Start a game before using power-ups.", "error");
+      return;
+    }
+
+    bombBlast();
+  });
+
+  buttons.line.addEventListener("click", () => {
+    if (!isPlaying()) {
+      announce("Start a game before using power-ups.", "error");
+      return;
+    }
+
+    clearBottomLine();
+  });
+
+  buttons.freeze.addEventListener("click", () => {
+    if (!isPlaying()) {
+      announce("Start a game before using power-ups.", "error");
+      return;
+    }
+
+    freezeTime();
+  });
+
+  updateUI();
+
+  window.blockdropPowerUps = {
+    reset() {
+      powers.bomb = 2;
+      powers.line = 2;
+      powers.freeze = 2;
+
+      if (freezeTimeout !== null) {
+        clearTimeout(freezeTimeout);
+        freezeTimeout = null;
+      }
+
+      freezeActive = false;
+      updateUI();
+      announce("Power-ups reset. Two uses of each ability available.");
+    },
+
+    getRemaining() {
+      return { ...powers };
+    }
+  };
+})();
 })();
 
 

@@ -727,4 +727,158 @@ footer span { color: var(--cyan); }
     align-items: flex-start;
   }
 }
+
+/* COMMIT 15 — POWER-UPS */
+
+.powerup-panel {
+  margin-top: 26px;
+  padding: 24px;
+  border: 1px solid rgba(133, 119, 255, 0.25);
+  border-radius: 22px;
+  background: linear-gradient(135deg, #171b36, #101a2d);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.powerup-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.powerup-eyebrow {
+  margin: 0 0 6px;
+  color: #a99bff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.powerup-heading h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 25px;
+}
+
+.powerup-badge {
+  padding: 8px 12px;
+  border: 1px solid rgba(169, 155, 255, 0.3);
+  border-radius: 20px;
+  color: #c5bcff;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.powerup-description {
+  margin: 10px 0 20px;
+  color: #a9b3cd;
+  font-size: 13px;
+}
+
+.powerup-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.powerup-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  padding: 18px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s,
+    background 0.2s;
+}
+
+.powerup-card:hover:not(:disabled) {
+  transform: translateY(-4px);
+  border-color: #9684ff;
+  background: rgba(125, 105, 255, 0.13);
+}
+
+.powerup-card:focus-visible {
+  outline: 2px solid #a99bff;
+  outline-offset: 3px;
+}
+
+.powerup-card:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.powerup-icon {
+  font-size: 30px;
+}
+
+.powerup-name {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.powerup-detail {
+  color: #a9b3cd;
+  font-size: 11px;
+  text-align: center;
+}
+
+.powerup-count {
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: rgba(132, 112, 255, 0.16);
+  color: #c9c0ff;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.powerup-status {
+  margin: 17px 0 0;
+  color: #b9c5e0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.powerup-status.powerup-success {
+  color: #78efbd;
+}
+
+.powerup-status.powerup-error {
+  color: #ff9999;
+}
+
+@media (max-width: 560px) {
+  .powerup-panel {
+    padding: 16px;
+  }
+
+  .powerup-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .powerup-card {
+    display: grid;
+    grid-template-columns: 42px 1fr auto;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .powerup-icon {
+    grid-row: span 2;
+  }
+
+  .powerup-name,
+  .powerup-detail {
+    text-align: left;
+  }
+
+  .powerup-count {
+    grid-column: 2 / 4;
+  }
+}
 }
