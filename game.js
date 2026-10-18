@@ -1331,4 +1331,156 @@ console.log("BLOCKDROP Commit 12 loaded successfully.");
 })();
 })();
 
+/* COMMIT 16 — COMBO & STREAK ENGINE */
+
+(() => {
+  "use strict";
+
+  const KEY = "blockdrop_combo_record_v1";
+  const $ = (id) => document.getElementById(id);
+
+  const elements = {
+    arena: $("comboArena"),
+    best: $("comboBest"),
+    number: $("comboNumber"),
+    label: $("comboLabel"),
+    message: $("comboMessage"),
+    streak: $("comboStreak"),
+    bonus: $("comboBonus"),
+    lines: $("comboLines"),
+    progress: $("comboProgress"),
+    hint: $("comboHint"),
+    flame: $("comboFlame")
+  };
+
+  if (Object.values(elements).some((element) => !element)) return;
+
+  let combo = 0;
+  let streakLines = 0;
+  let bonusPoints = 0;
+  let lastClearAt = 0;
+  let resetTimer = null;
+
+  function readBest() {
+    try {
+      return Math.max(0, Number(localStorage.getItem(KEY)) || 0);
+    } catch {
+      return 0;
+    }
+  }
+
+  function saveBest(value) {
+    try {
+      localStorage.setItem(KEY, String(value));
+    } catch {
+      // The combo feature still works if storage is unavailable.
+    }
+  }
+
+  function render() {
+    elements.best.textContent = `BEST: ${readBest()}x`;
+    elements.number.textContent = `${combo}x`;
+    elements.streak.textContent = String(combo);
+    elements.bonus.textContent = bonusPoints.toLocaleString();
+    elements.lines.textContent = String(streakLines);
+
+    const progress = Math.min(100, (combo % 5) * 20);
+    elements.progress.style.width = `${combo > 0 && combo % 5 === 0 ? 100 : progress}%`;
+
+    if (combo === 0) {
+      elements.label.textContent = "START YOUR STREAK";
+      elements.message.textContent =
+        "Clear consecutive lines to build your combo!";
+      elements.hint.textContent = "Clear a line to start your streak.";
+      elements.flame.textContent = "🔥";
+    } else if (combo < 3) {
+      elements.label.textContent = "NICE COMBO!";
+      elements.message.textContent = "Keep clearing lines!";
+      elements.hint.textContent = "Reach 3x for a bigger bonus.";
+      elements.flame.textContent = "🔥";
+    } else if (combo < 5) {
+      elements.label.textContent = "ON FIRE!";
+      elements.message.textContent = "Your streak is growing!";
+      elements.hint.textContent = "Reach 5x to hit the next milestone.";
+      elements.flame.textContent = "🔥🔥";
+    } else {
+      elements.label.textContent = "LEGENDARY STREAK!";
+      elements.message.textContent = "Amazing line-clearing skills!";
+      elements.hint.textContent = "Keep the streak alive!";
+      elements.flame.textContent = "🔥🔥🔥";
+    }
+  }
+
+  function recordClear(linesCleared) {
+    const amount = Math.max(0, Math.floor(Number(linesCleared) || 0));
+
+    if (amount === 0) {
+      breakStreak();
+      return { combo, bonus: 0 };
+    }
+
+    combo += 1;
+    streakLines += amount;
+    lastClearAt = Date.now();
+
+    const multiplier = Math.min(combo, 10);
+    const bonus = amount * 50 * multiplier;
+
+    bonusPoints += bonus;
+
+    if (combo > readBest()) {
+      saveBest(combo);
+    }
+
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => {
+      combo = 0;
+      streakLines = 0;
+      render();
+    }, 8000);
+
+    elements.arena.classList.remove("combo-active");
+    void elements.arena.offsetWidth;
+    elements.arena.classList.add("combo-active");
+
+    render();
+
+    return { combo, bonus };
+  }
+
+  function breakStreak() {
+    combo = 0;
+    streakLines = 0;
+    clearTimeout(resetTimer);
+    render();
+  }
+
+  function resetGame() {
+    combo = 0;
+    streakLines = 0;
+    bonusPoints = 0;
+    lastClearAt = 0;
+    clearTimeout(resetTimer);
+    render();
+  }
+
+  window.blockdropCombo = {
+    recordClear,
+    breakStreak,
+    resetGame,
+    getState() {
+      return {
+        combo,
+        streakLines,
+        bonusPoints,
+        bestCombo: readBest(),
+        lastClearAt
+      };
+    }
+  };
+
+  render();
+})();
+
+
 

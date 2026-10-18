@@ -327,6 +327,48 @@
     Choose a power-up to activate it.
   </p>
 </section>
+
+<!-- COMMIT 16: COMBO & STREAK SYSTEM -->
+<section class="combo-panel" id="comboPanel">
+  <div class="combo-header">
+    <div>
+      <p class="combo-eyebrow">KEEP THE MOMENTUM</p>
+      <h2>Combo System</h2>
+    </div>
+    <span class="combo-best" id="comboBest">BEST: 0x</span>
+  </div>
+
+  <div class="combo-arena" id="comboArena">
+    <div class="combo-flame" id="comboFlame">🔥</div>
+    <div class="combo-number" id="comboNumber">0x</div>
+    <div class="combo-label" id="comboLabel">START YOUR STREAK</div>
+    <div class="combo-message" id="comboMessage">
+      Clear consecutive lines to build your combo!
+    </div>
+  </div>
+
+  <div class="combo-stats">
+    <div class="combo-stat">
+      <span>Current streak</span>
+      <strong id="comboStreak">0</strong>
+    </div>
+    <div class="combo-stat">
+      <span>Bonus points</span>
+      <strong id="comboBonus">0</strong>
+    </div>
+    <div class="combo-stat">
+      <span>Lines in streak</span>
+      <strong id="comboLines">0</strong>
+    </div>
+  </div>
+
+  <div class="combo-progress-track">
+    <div class="combo-progress-fill" id="comboProgress"></div>
+  </div>
+  <p class="combo-hint" id="comboHint">
+    Clear a line to start your streak.
+  </p>
+</section>
 </main>
 </body>
 </html>
