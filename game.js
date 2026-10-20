@@ -1482,5 +1482,185 @@ console.log("BLOCKDROP Commit 12 loaded successfully.");
   render();
 })();
 
+/* COMMIT 17 — THEME PREFERENCES */
+
+(() => {
+  "use strict";
+
+  const STORAGE_KEY = "blockdrop_theme_preferences_v1";
+
+  const defaults = {
+    theme: "nebula",
+    reduceMotion: false,
+    glow: true,
+    accent: "#8b7cff"
+  };
+
+  const validThemes = ["nebula", "matrix", "sunset", "ice"];
+
+  const $ = (id) => document.getElementById(id);
+
+  const status = $("themeStatus");
+  const accentInput = $("customAccent");
+  const motionInput = $("reduceMotionToggle");
+  const glowInput = $("glowToggle");
+  const resetButton = $("resetThemeSettings");
+
+  const themeButtons = Array.from(
+    document.querySelectorAll(".theme-card[data-theme]")
+  );
+
+  if (
+    !status ||
+    !accentInput ||
+    !motionInput ||
+    !glowInput ||
+    !resetButton ||
+    themeButtons.length === 0
+  ) {
+    return;
+  }
+
+  function loadPreferences() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+      if (!saved || typeof saved !== "object") {
+        return { ...defaults };
+      }
+
+      return {
+        ...defaults,
+        ...saved,
+        theme: validThemes.includes(saved.theme)
+          ? saved.theme
+          : defaults.theme,
+        reduceMotion: saved.reduceMotion === true,
+        glow: saved.glow !== false,
+        accent: /^#[0-9a-fA-F]{6}$/.test(saved.accent || "")
+          ? saved.accent
+          : defaults.accent
+      };
+    } catch {
+      return { ...defaults };
+    }
+  }
+
+  let preferences = loadPreferences();
+
+  function savePreferences() {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(preferences)
+      );
+    } catch {
+      status.textContent =
+        "Settings applied, but browser storage is unavailable.";
+    }
+  }
+
+  function hexToRgb(hex) {
+    const value = hex.replace("#", "");
+
+    return [
+      parseInt(value.slice(0, 2), 16),
+      parseInt(value.slice(2, 4), 16),
+      parseInt(value.slice(4, 6), 16)
+    ].join(", ");
+  }
+
+  function applyPreferences() {
+    document.body.dataset.bdTheme = preferences.theme;
+
+    document.documentElement.style.setProperty(
+      "--bd-accent",
+      preferences.accent
+    );
+
+    document.documentElement.style.setProperty(
+      "--bd-accent-rgb",
+      hexToRgb(preferences.accent)
+    );
+
+    document.body.classList.toggle(
+      "bd-reduce-motion",
+      preferences.reduceMotion
+    );
+
+    document.body.classList.toggle(
+      "bd-no-glow",
+      !preferences.glow
+    );
+
+    motionInput.checked = preferences.reduceMotion;
+    glowInput.checked = preferences.glow;
+    accentInput.value = preferences.accent;
+
+    themeButtons.forEach((button) => {
+      const selected = button.dataset.theme === preferences.theme;
+
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+
+    status.textContent =
+      `${preferences.theme.charAt(0).toUpperCase() +
+      preferences.theme.slice(1)} theme selected.`;
+  }
+
+  function selectTheme(theme) {
+    if (!validThemes.includes(theme)) return;
+
+    preferences.theme = theme;
+
+    // Restore the theme's default accent when switching themes.
+    const themeAccents = {
+      nebula: "#8b7cff",
+      matrix: "#65f7ad",
+      sunset: "#ffad70",
+      ice: "#91e7ff"
+    };
+
+    preferences.accent = themeAccents[theme];
+
+    applyPreferences();
+    savePreferences();
+  }
+
+  themeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      selectTheme(button.dataset.theme);
+    });
+  });
+
+  motionInput.addEventListener("change", () => {
+    preferences.reduceMotion = motionInput.checked;
+    applyPreferences();
+    savePreferences();
+  });
+
+  glowInput.addEventListener("change", () => {
+    preferences.glow = glowInput.checked;
+    applyPreferences();
+    savePreferences();
+  });
+
+  accentInput.addEventListener("input", () => {
+    preferences.accent = accentInput.value;
+    applyPreferences();
+    savePreferences();
+  });
+
+  resetButton.addEventListener("click", () => {
+    preferences = { ...defaults };
+    applyPreferences();
+    savePreferences();
+    status.textContent = "Appearance settings reset to defaults.";
+  });
+
+  applyPreferences();
+})();
+
 
 

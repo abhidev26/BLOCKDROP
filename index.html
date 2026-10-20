@@ -369,6 +369,86 @@
     Clear a line to start your streak.
   </p>
 </section>
+
+<!-- COMMIT 17: THEMES & CUSTOMIZATION -->
+<section class="theme-panel" id="themePanel">
+  <div class="theme-header">
+    <div>
+      <p class="theme-eyebrow">MAKE IT YOURS</p>
+      <h2>Game Appearance</h2>
+      <p class="theme-subtitle">Choose your BLOCKDROP atmosphere.</p>
+    </div>
+    <span class="theme-icon">🎨</span>
+  </div>
+
+  <div class="theme-grid">
+    <button class="theme-card active" data-theme="nebula" type="button">
+      <span class="theme-preview nebula-preview">
+        <i></i><i></i><i></i><i></i>
+      </span>
+      <strong>Nebula</strong>
+      <small>Cosmic purple</small>
+    </button>
+
+    <button class="theme-card" data-theme="matrix" type="button">
+      <span class="theme-preview matrix-preview">
+        <i></i><i></i><i></i><i></i>
+      </span>
+      <strong>Matrix</strong>
+      <small>Digital green</small>
+    </button>
+
+    <button class="theme-card" data-theme="sunset" type="button">
+      <span class="theme-preview sunset-preview">
+        <i></i><i></i><i></i><i></i>
+      </span>
+      <strong>Sunset</strong>
+      <small>Warm orange</small>
+    </button>
+
+    <button class="theme-card" data-theme="ice" type="button">
+      <span class="theme-preview ice-preview">
+        <i></i><i></i><i></i><i></i>
+      </span>
+      <strong>Arctic</strong>
+      <small>Frozen blue</small>
+    </button>
+  </div>
+
+  <div class="theme-settings">
+    <label class="theme-toggle">
+      <span>
+        <strong>Reduce motion</strong>
+        <small>Use calmer transitions and effects.</small>
+      </span>
+      <input type="checkbox" id="reduceMotionToggle">
+    </label>
+
+    <label class="theme-toggle">
+      <span>
+        <strong>Glow effects</strong>
+        <small>Enable decorative neon glow.</small>
+      </span>
+      <input type="checkbox" id="glowToggle" checked>
+    </label>
+
+    <label class="theme-color-setting" for="customAccent">
+      <span>
+        <strong>Custom accent</strong>
+        <small>Choose your own highlight color.</small>
+      </span>
+      <input type="color" id="customAccent" value="#8b7cff">
+    </label>
+
+    <button class="theme-reset" id="resetThemeSettings" type="button">
+      Reset appearance
+    </button>
+  </div>
+
+  <p class="theme-status" id="themeStatus" aria-live="polite">
+    Nebula theme selected.
+  </p>
+</section>
 </main>
 </body>
 </html>
