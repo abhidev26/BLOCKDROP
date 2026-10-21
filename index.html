@@ -449,6 +449,60 @@
     Nebula theme selected.
   </p>
 </section>
+
+<!-- COMMIT 18: ADVANCED VISUAL EFFECTS -->
+<section class="effects-panel" id="effectsPanel">
+  <div class="effects-header">
+    <div>
+      <p class="effects-eyebrow">NEXT-LEVEL GAMEPLAY</p>
+      <h2>Visual Effects</h2>
+      <p>Customize the action and intensity of your game.</p>
+    </div>
+    <span class="effects-icon">✨</span>
+  </div>
+
+  <div class="effects-options">
+    <label class="effects-option">
+      <span>
+        <strong>Particle bursts</strong>
+        <small>Colorful particles on line clears.</small>
+      </span>
+      <input id="particlesToggle" type="checkbox" checked>
+    </label>
+
+    <label class="effects-option">
+      <span>
+        <strong>Screen shake</strong>
+        <small>Subtle impact when clearing lines.</small>
+      </span>
+      <input id="shakeToggle" type="checkbox" checked>
+    </label>
+
+    <label class="effects-option">
+      <span>
+        <strong>Floating score</strong>
+        <small>Animated bonus-point notifications.</small>
+      </span>
+      <input id="floatingScoreToggle" type="checkbox" checked>
+    </label>
+  </div>
+
+  <div class="effects-preview" id="effectsPreview">
+    <div class="effects-preview-content">
+      <span>BLOCKDROP</span>
+      <strong>READY TO PLAY?</strong>
+      <button id="previewEffectsBtn" type="button">Preview Effects</button>
+    </div>
+  </div>
+
+  <p class="effects-status" id="effectsStatus" aria-live="polite">
+    Visual effects enabled.
+  </p>
+</section>
+
+<!-- Floating effects appear here -->
+<div id="bdEffectsLayer" aria-hidden="true"></div>
+
 </main>
 </body>
 </html>

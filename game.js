@@ -1662,5 +1662,225 @@ console.log("BLOCKDROP Commit 12 loaded successfully.");
   applyPreferences();
 })();
 
+/* COMMIT 18 — VISUAL EFFECTS ENGINE */
+
+(() => {
+  "use strict";
+
+  const STORAGE_KEY = "blockdrop_visual_effects_v1";
+  const $ = (id) => document.getElementById(id);
+
+  const particlesToggle = $("particlesToggle");
+  const shakeToggle = $("shakeToggle");
+  const floatingToggle = $("floatingScoreToggle");
+  const previewButton = $("previewEffectsBtn");
+  const preview = $("effectsPreview");
+  const status = $("effectsStatus");
+  const layer = $("bdEffectsLayer");
+
+  if (
+    !particlesToggle ||
+    !shakeToggle ||
+    !floatingToggle ||
+    !previewButton ||
+    !preview ||
+    !status ||
+    !layer
+  ) {
+    return;
+  }
+
+  const defaults = {
+    particles: true,
+    shake: true,
+    floatingScore: true
+  };
+
+  function loadSettings() {
+    try {
+      return {
+        ...defaults,
+        ...JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}")
+      };
+    } catch {
+      return { ...defaults };
+    }
+  }
+
+  let settings = loadSettings();
+
+  function saveSettings() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    } catch {
+      // Effects continue to work if storage is unavailable.
+    }
+  }
+
+  function renderSettings() {
+    particlesToggle.checked = settings.particles;
+    shakeToggle.checked = settings.shake;
+    floatingToggle.checked = settings.floatingScore;
+
+    status.textContent = [
+      settings.particles ? "Particles on" : "Particles off",
+      settings.shake ? "screen shake on" : "screen shake off",
+      settings.floatingScore ? "floating score on" : "floating score off"
+    ].join(" · ") + ".";
+  }
+
+  function randomBetween(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function burst(x, y, amount = 24) {
+    if (!settings.particles) return;
+
+    const colors = [
+      "#a99bff",
+      "#65f7ad",
+      "#ffbd7a",
+      "#91e7ff",
+      "#ff80bf"
+    ];
+
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < amount; i++) {
+      const particle = document.createElement("span");
+      const angle = randomBetween(0, Math.PI * 2);
+      const distance = randomBetween(35, 145);
+
+      particle.className = "bd-particle";
+      particle.style.left = `${x}px`;
+      particle.style.top = `${y}px`;
+      particle.style.setProperty(
+        "--particle-x",
+        `${Math.cos(angle) * distance}px`
+      );
+      particle.style.setProperty(
+        "--particle-y",
+        `${Math.sin(angle) * distance}px`
+      );
+      particle.style.setProperty(
+        "--particle-color",
+        colors[Math.floor(Math.random() * colors.length)]
+      );
+
+      fragment.appendChild(particle);
+      particle.addEventListener("animationend", () => particle.remove(), {
+        once: true
+      });
+    }
+
+    layer.appendChild(fragment);
+
+    // Keep the effects layer lightweight.
+    while (layer.childElementCount > 180) {
+      layer.firstElementChild.remove();
+    }
+  }
+
+  function floatingScore(points, x, y) {
+    if (!settings.floatingScore) return;
+
+    const element = document.createElement("div");
+    element.className = "bd-floating-score";
+    element.textContent = `+${Math.max(0, Math.round(points))}`;
+
+    element.style.left = `${x}px`;
+    element.style.top = `${y}px`;
+
+    layer.appendChild(element);
+    element.addEventListener("animationend", () => element.remove(), {
+      once: true
+    });
+  }
+
+  function shake(target) {
+    if (!settings.shake || !target) return;
+
+    target.classList.remove("bd-screen-shake");
+    void target.offsetWidth;
+    target.classList.add("bd-screen-shake");
+
+    target.addEventListener("animationend", () => {
+      target.classList.remove("bd-screen-shake");
+    }, { once: true });
+  }
+
+  function flash(target) {
+    if (!target) return;
+
+    target.classList.remove("bd-line-flash");
+    void target.offsetWidth;
+    target.classList.add("bd-line-flash");
+
+    target.addEventListener("animationend", () => {
+      target.classList.remove("bd-line-flash");
+    }, { once: true });
+  }
+
+  function previewEffects() {
+    const rect = preview.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    burst(x, y, 32);
+    floatingScore(500, x, y - 10);
+    shake(preview);
+    flash(preview);
+
+    status.textContent = "Visual effects preview played.";
+  }
+
+  particlesToggle.addEventListener("change", () => {
+    settings.particles = particlesToggle.checked;
+    saveSettings();
+    renderSettings();
+  });
+
+  shakeToggle.addEventListener("change", () => {
+    settings.shake = shakeToggle.checked;
+    saveSettings();
+    renderSettings();
+  });
+
+  floatingToggle.addEventListener("change", () => {
+    settings.floatingScore = floatingToggle.checked;
+    saveSettings();
+    renderSettings();
+  });
+
+  previewButton.addEventListener("click", previewEffects);
+
+  // Expose event hooks for integration with the real game engine.
+  window.blockdropEffects = {
+    burst,
+    floatingScore,
+    shake,
+    flash,
+    preview: previewEffects,
+
+    lineClear(points = 0, target = preview) {
+      const rect = target.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+
+      burst(x, y, 30);
+      floatingScore(points, x, y);
+      shake(target);
+      flash(target);
+    },
+
+    getSettings() {
+      return { ...settings };
+    }
+  };
+
+  renderSettings();
+})();
+
+
 
 
