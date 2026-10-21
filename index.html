@@ -503,6 +503,56 @@
 <!-- Floating effects appear here -->
 <div id="bdEffectsLayer" aria-hidden="true"></div>
 
+<!-- COMMIT 18: VISUAL EFFECTS SETTINGS -->
+<section class="fx-panel" id="fxPanel">
+  <div class="fx-header">
+    <div>
+      <p class="fx-eyebrow">NEXT-LEVEL GAMEPLAY</p>
+      <h2>Visual Effects</h2>
+      <p class="fx-subtitle">Customize your arcade experience.</p>
+    </div>
+    <span class="fx-icon">✨</span>
+  </div>
+
+  <div class="fx-options">
+    <label class="fx-option">
+      <span>
+        <strong>Particle bursts</strong>
+        <small>Animated particles on demand.</small>
+      </span>
+      <input type="checkbox" id="fxParticles" checked>
+    </label>
+
+    <label class="fx-option">
+      <span>
+        <strong>Screen shake</strong>
+        <small>Subtle impact feedback.</small>
+      </span>
+      <input type="checkbox" id="fxShake" checked>
+    </label>
+
+    <label class="fx-option">
+      <span>
+        <strong>Floating score</strong>
+        <small>Animated score notifications.</small>
+      </span>
+      <input type="checkbox" id="fxFloatingScore" checked>
+    </label>
+  </div>
+
+  <div class="fx-actions">
+    <button type="button" id="fxPreviewButton">Preview Effects ✨</button>
+    <button type="button" id="fxResetButton">Reset</button>
+  </div>
+
+  <div class="fx-stage" id="fxStage" aria-live="polite">
+    <span class="fx-stage-label">EFFECTS PREVIEW</span>
+    <span class="fx-stage-message" id="fxStageMessage">
+      Your arcade effects are ready.
+    </span>
+  </div>
+</section>
+
 </main>
 </body>
 </html>

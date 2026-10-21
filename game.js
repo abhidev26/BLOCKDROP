@@ -1881,6 +1881,190 @@ console.log("BLOCKDROP Commit 12 loaded successfully.");
   renderSettings();
 })();
 
+/* COMMIT 18 — ADVANCED VISUAL EFFECTS ENGINE */
+
+(() => {
+  "use strict";
+
+  const STORAGE_KEY = "blockdrop_visual_effects_v1";
+  const $ = (id) => document.getElementById(id);
+
+  const stage = $("fxStage");
+  const message = $("fxStageMessage");
+  const particlesToggle = $("fxParticles");
+  const shakeToggle = $("fxShake");
+  const scoreToggle = $("fxFloatingScore");
+  const previewButton = $("fxPreviewButton");
+  const resetButton = $("fxResetButton");
+
+  if (
+    !stage || !message || !particlesToggle || !shakeToggle ||
+    !scoreToggle || !previewButton || !resetButton
+  ) {
+    return;
+  }
+
+  const defaults = {
+    particles: true,
+    shake: true,
+    floatingScore: true
+  };
+
+  function loadSettings() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      return { ...defaults, ...(saved || {}) };
+    } catch {
+      return { ...defaults };
+    }
+  }
+
+  let settings = loadSettings();
+
+  function saveSettings() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    } catch {
+      // Effects continue working for the current session.
+    }
+  }
+
+  function syncControls() {
+    particlesToggle.checked = settings.particles;
+    shakeToggle.checked = settings.shake;
+    scoreToggle.checked = settings.floatingScore;
+  }
+
+  function prefersReducedMotion() {
+    return window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function burst(container, count = 24) {
+    if (!settings.particles || prefersReducedMotion()) return;
+
+    const colors = ["#a99bff", "#ffbd81", "#6cf5d2", "#83c9ff"];
+    const rect = container.getBoundingClientRect();
+
+    for (let i = 0; i < count; i++) {
+      const particle = document.createElement("span");
+      particle.className = "fx-particle";
+
+      particle.style.left = `${20 + Math.random() * 60}%`;
+      particle.style.top = `${25 + Math.random() * 50}%`;
+      particle.style.setProperty(
+        "--particle-color",
+        colors[Math.floor(Math.random() * colors.length)]
+      );
+      particle.style.setProperty("--dx", `${Math.random() * 180 - 90}px`);
+      particle.style.setProperty("--dy", `${Math.random() * 150 - 100}px`);
+
+      container.appendChild(particle);
+      particle.addEventListener("animationend", () => particle.remove(), {
+        once: true
+      });
+    }
+
+    // Fallback cleanup in case animationend does not fire.
+    window.setTimeout(() => {
+      container.querySelectorAll(".fx-particle").forEach((particle) => {
+        if (!particle.isConnected) return;
+        particle.remove();
+      });
+    }, 1200);
+  }
+
+  function floatingScore(container, points = 250) {
+    if (!settings.floatingScore || prefersReducedMotion()) return;
+
+    const popup = document.createElement("span");
+    popup.className = "fx-floating-score";
+    popup.textContent = `+${Math.max(0, Math.floor(Number(points) || 0))}`;
+
+    popup.style.left = "50%";
+    popup.style.top = "58%";
+    popup.style.transform = "translateX(-50%)";
+
+    container.appendChild(popup);
+    popup.addEventListener("animationend", () => popup.remove(), {
+      once: true
+    });
+
+    window.setTimeout(() => popup.remove(), 1300);
+  }
+
+  function screenShake(target = stage) {
+    if (!settings.shake || prefersReducedMotion() || !target) return;
+
+    target.classList.remove("fx-shake");
+    void target.offsetWidth;
+    target.classList.add("fx-shake");
+
+    window.setTimeout(() => {
+      target.classList.remove("fx-shake");
+    }, 300);
+  }
+
+  function previewEffects() {
+    message.textContent = "Combo! +250 points";
+    burst(stage);
+    floatingScore(stage, 250);
+    screenShake(stage);
+  }
+
+  particlesToggle.addEventListener("change", () => {
+    settings.particles = particlesToggle.checked;
+    saveSettings();
+  });
+
+  shakeToggle.addEventListener("change", () => {
+    settings.shake = shakeToggle.checked;
+    saveSettings();
+  });
+
+  scoreToggle.addEventListener("change", () => {
+    settings.floatingScore = scoreToggle.checked;
+    saveSettings();
+  });
+
+  previewButton.addEventListener("click", previewEffects);
+
+  resetButton.addEventListener("click", () => {
+    settings = { ...defaults };
+    syncControls();
+    saveSettings();
+    message.textContent = "Visual effects settings reset.";
+  });
+
+  // Public API for connecting effects to actual gameplay events.
+  window.blockdropEffects = {
+    lineClear(points = 100, target = stage) {
+      burst(target);
+      floatingScore(target, points);
+    },
+
+    hardDrop(points = 0, target = stage) {
+      screenShake(target);
+      if (points > 0) floatingScore(target, points);
+    },
+
+    combo(points = 250, target = stage) {
+      burst(target, 32);
+      floatingScore(target, points);
+      screenShake(target);
+    },
+
+    preview: previewEffects,
+
+    getSettings() {
+      return { ...settings };
+    }
+  };
+
+  syncControls();
+})();
+
+
 
 
 
