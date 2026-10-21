@@ -2064,6 +2064,146 @@ console.log("BLOCKDROP Commit 12 loaded successfully.");
   syncControls();
 })();
 
+/* BLOCKDROP COMMIT 19: SETTINGS & ACCESSIBILITY */
+
+(() => {
+  const STORAGE_KEY = "blockdrop_accessibility_settings_v1";
+
+  const defaults = {
+    sound: true,
+    highContrast: false,
+    largeText: false,
+    reducedMotion: false
+  };
+
+  const controls = {
+    sound: document.getElementById("settingSound"),
+    highContrast: document.getElementById("settingHighContrast"),
+    largeText: document.getElementById("settingLargeText"),
+    reducedMotion: document.getElementById("settingReducedMotion")
+  };
+
+  const panel = document.getElementById("accessibilitySettings");
+  const openButton = document.getElementById("settingsOpen");
+  const closeButton = document.getElementById("settingsClose");
+  const resetButton = document.getElementById("settingsReset");
+  const status = document.getElementById("settingsSaveStatus");
+
+  if (
+    !panel ||
+    !openButton ||
+    !closeButton ||
+    !resetButton ||
+    Object.values(controls).some((control) => !control)
+  ) {
+    console.warn("BLOCKDROP settings: required HTML elements were not found.");
+    return;
+  }
+
+  let settings = { ...defaults };
+
+  function loadSettings() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+
+      if (saved && typeof saved === "object" && !Array.isArray(saved)) {
+        settings = {
+          sound: typeof saved.sound === "boolean" ? saved.sound : defaults.sound,
+          highContrast: typeof saved.highContrast === "boolean"
+            ? saved.highContrast : defaults.highContrast,
+          largeText: typeof saved.largeText === "boolean"
+            ? saved.largeText : defaults.largeText,
+          reducedMotion: typeof saved.reducedMotion === "boolean"
+            ? saved.reducedMotion : defaults.reducedMotion
+        };
+      }
+    } catch (error) {
+      console.warn("BLOCKDROP settings could not be loaded.", error);
+      settings = { ...defaults };
+    }
+  }
+
+  function applySettings() {
+    document.body.classList.toggle(
+      "blockdrop-high-contrast",
+      settings.highContrast
+    );
+
+    document.body.classList.toggle(
+      "blockdrop-large-text",
+      settings.largeText
+    );
+
+    document.body.classList.toggle(
+      "blockdrop-reduced-motion",
+      settings.reducedMotion
+    );
+
+    Object.entries(controls).forEach(([key, control]) => {
+      control.checked = settings[key];
+    });
+
+    // Expose the sound preference for the existing audio system.
+    // Existing sound functions must check this preference to mute playback.
+    window.blockdropSettings = {
+      ...settings,
+      isSoundEnabled: () => settings.sound,
+      isReducedMotionEnabled: () => settings.reducedMotion,
+      getSettings: () => ({ ...settings })
+    };
+  }
+
+  function saveSettings() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+      status.textContent = "Preferences saved on this device.";
+    } catch (error) {
+      status.textContent = "Could not save preferences in this browser.";
+      console.warn("BLOCKDROP settings could not be saved.", error);
+    }
+
+    applySettings();
+  }
+
+  function openSettings() {
+    panel.classList.add("is-open");
+    openButton.setAttribute("aria-expanded", "true");
+    closeButton.focus();
+  }
+
+  function closeSettings() {
+    panel.classList.remove("is-open");
+    openButton.setAttribute("aria-expanded", "false");
+    openButton.focus();
+  }
+
+  openButton.addEventListener("click", openSettings);
+  closeButton.addEventListener("click", closeSettings);
+
+  panel.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeSettings();
+    }
+  });
+
+  Object.entries(controls).forEach(([key, control]) => {
+    control.addEventListener("change", () => {
+      settings[key] = control.checked;
+      saveSettings();
+    });
+  });
+
+  resetButton.addEventListener("click", () => {
+    settings = { ...defaults };
+    saveSettings();
+    status.textContent = "Settings restored to defaults.";
+  });
+
+  loadSettings();
+  applySettings();
+})();
+
+
 
 
 

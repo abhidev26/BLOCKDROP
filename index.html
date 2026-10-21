@@ -554,5 +554,67 @@
 </section>
 
 </main>
+
+<!-- BLOCKDROP COMMIT 19: SETTINGS & ACCESSIBILITY -->
+<section class="settings-panel" id="accessibilitySettings" aria-labelledby="settingsTitle">
+  <div class="settings-header">
+    <div>
+      <span class="settings-eyebrow">PERSONALIZE YOUR GAME</span>
+      <h2 id="settingsTitle">Settings & Accessibility</h2>
+      <p>Make BLOCKDROP comfortable for you to play.</p>
+    </div>
+    <button type="button" id="settingsClose" class="settings-close" aria-label="Close settings">×</button>
+  </div>
+
+  <div class="settings-list">
+    <label class="setting-row" for="settingSound">
+      <span>
+        <strong>Sound effects</strong>
+        <small>Enable or disable game audio preferences.</small>
+      </span>
+      <input type="checkbox" id="settingSound" checked>
+    </label>
+
+    <label class="setting-row" for="settingHighContrast">
+      <span>
+        <strong>High contrast</strong>
+        <small>Increase contrast for clearer game elements.</small>
+      </span>
+      <input type="checkbox" id="settingHighContrast">
+    </label>
+
+    <label class="setting-row" for="settingLargeText">
+      <span>
+        <strong>Larger text</strong>
+        <small>Make interface text easier to read.</small>
+      </span>
+      <input type="checkbox" id="settingLargeText">
+    </label>
+
+    <label class="setting-row" for="settingReducedMotion">
+      <span>
+        <strong>Reduce motion</strong>
+        <small>Reduce decorative movement and animations.</small>
+      </span>
+      <input type="checkbox" id="settingReducedMotion">
+    </label>
+  </div>
+
+  <div class="settings-footer">
+    <span id="settingsSaveStatus" role="status" aria-live="polite">Your preferences are saved on this device.</span>
+    <button type="button" id="settingsReset" class="settings-reset">Reset settings</button>
+  </div>
+</section>
+
+<button
+  type="button"
+  id="settingsOpen"
+  class="settings-open"
+  aria-controls="accessibilitySettings"
+  aria-expanded="false"
+>
+  ⚙ Settings
+</button>
+
 </body>
 </html>

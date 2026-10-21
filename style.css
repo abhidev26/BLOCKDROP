@@ -1742,4 +1742,219 @@ body.bd-reduce-motion *::after {
   }
 }
 
+/* BLOCKDROP COMMIT 19: SETTINGS & ACCESSIBILITY */
+
+.settings-panel {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(92vw, 520px);
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 22px;
+  background: #101522;
+  color: #f8fafc;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+}
+
+.settings-panel.is-open {
+  display: block;
+  animation: settingsEnter 180ms ease-out;
+}
+
+.settings-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.settings-header h2 {
+  margin: 8px 0;
+  font-size: 1.45rem;
+}
+
+.settings-header p,
+.settings-eyebrow {
+  color: #aeb8cc;
+  font-size: 0.86rem;
+}
+
+.settings-eyebrow {
+  color: #f5b942;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+}
+
+.settings-close {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #3a4356;
+  border-radius: 12px;
+  background: #20283a;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.settings-list {
+  display: grid;
+  gap: 10px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 15px;
+  border: 1px solid #30394c;
+  border-radius: 14px;
+  background: #171e2d;
+  cursor: pointer;
+}
+
+.setting-row strong,
+.setting-row small {
+  display: block;
+}
+
+.setting-row strong {
+  margin-bottom: 5px;
+}
+
+.setting-row small {
+  color: #aeb8cc;
+  line-height: 1.45;
+}
+
+.setting-row input {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  accent-color: #f5b942;
+  cursor: pointer;
+}
+
+.settings-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.settings-footer span {
+  color: #aeb8cc;
+  font-size: 0.8rem;
+}
+
+.settings-reset,
+.settings-open {
+  border: 1px solid #4a556c;
+  border-radius: 12px;
+  padding: 11px 15px;
+  background: #20283a;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.settings-open {
+  position: fixed;
+  z-index: 1000;
+  right: 20px;
+  bottom: 20px;
+  background: #f5b942;
+  border-color: #f5b942;
+  color: #151515;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.settings-close:hover,
+.settings-reset:hover {
+  border-color: #f5b942;
+}
+
+.settings-open:hover {
+  filter: brightness(1.08);
+}
+
+.settings-panel button:focus-visible,
+.settings-open:focus-visible,
+.setting-row input:focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 3px;
+}
+
+body.blockdrop-high-contrast {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+body.blockdrop-high-contrast button,
+body.blockdrop-high-contrast .settings-panel,
+body.blockdrop-high-contrast .setting-row {
+  border: 2px solid #fff !important;
+}
+
+body.blockdrop-high-contrast .settings-panel,
+body.blockdrop-high-contrast .setting-row {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+body.blockdrop-large-text {
+  font-size: 120% !important;
+}
+
+body.blockdrop-large-text button,
+body.blockdrop-large-text p,
+body.blockdrop-large-text label,
+body.blockdrop-large-text small {
+  font-size: 1.08em;
+}
+
+body.blockdrop-reduced-motion *,
+body.blockdrop-reduced-motion *::before,
+body.blockdrop-reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0.01ms !important;
+}
+
+@keyframes settingsEnter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (max-width: 520px) {
+  .settings-panel {
+    padding: 18px;
+  }
+
+  .settings-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .settings-open {
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
 }
