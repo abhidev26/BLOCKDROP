@@ -1,620 +1,133 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="crimson">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#080d1b" />
-  <title>BLOCKDROP | Puzzle Arcade</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a090d">
+  <meta name="description" content="BLOCKDROP — a cinematic, neon-powered block puzzle experience.">
+  <title>BLOCKDROP — Drop Into Another Dimension</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <script src="game.js" defer></script>
 </head>
 <body>
+  <div class="loader" id="loader" aria-label="Loading BLOCKDROP">
+    <div class="loader-mark"><span></span><span></span><span></span><span></span></div>
+    <p class="eyebrow">THE NEXT DROP IS YOURS</p>
+    <h1>BLOCK<span>DROP</span></h1>
+    <div class="loader-track"><i></i></div>
+    <small>INITIALIZING PLAY SPACE <b id="loadPercent">00</b>%</small>
+  </div>
+
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
   <header class="topbar">
-    <a class="brand" href="#">BLOCK<span>DROP</span></a>
-    <span class="version">COMMIT 12 · AUDIO UPDATE</span>
+    <a class="brand" href="#home" aria-label="BLOCKDROP home">
+      <span class="brand-cube"><i></i><i></i><i></i><i></i></span>
+      <span>BLOCK<span>DROP</span><small>ARCADE / 001</small></span>
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#play">PLAY</a><a href="#features">EXPERIENCE</a><a href="#how">HOW TO PLAY</a>
+    </nav>
+    <div class="top-actions">
+      <button class="icon-button" id="themeToggle" aria-label="Switch color theme" title="Switch theme">◐</button>
+      <button class="icon-button" id="soundToggle" aria-label="Toggle sound" title="Toggle sound">♫</button>
+      <a class="button button-small button-outline" href="#play">ENTER ARENA <span>↗</span></a>
+    </div>
+    <button class="mobile-menu" id="mobileMenu" aria-label="Toggle navigation">☰</button>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <p class="eyebrow">THE ULTIMATE BLOCK PUZZLE</p>
-      <h1>Drop. Clear. <span>Dominate.</span></h1>
-      <p>Build combos, beat your high score and master every mode.</p>
-    </section>
-
-    <section class="settings panel">
-      <div class="field">
-        <label for="gameMode">GAME MODE</label>
-        <select id="gameMode">
-          <option value="classic">Classic</option>
-          <option value="time">Time Attack · 2 min</option>
-          <option value="endless">Endless</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="difficulty">DIFFICULTY</label>
-        <select id="difficulty">
-          <option value="normal">Normal</option>
-          <option value="hard">Hard</option>
-          <option value="insane">Insane</option>
-        </select>
-      </div>
-
-      <div class="best-score">
-        <span>BEST SCORE</span>
-        <strong id="bestScore">0</strong>
-      </div>
-    </section>
-
-    <section class="game-layout">
-      <div class="game-board panel">
-        <div class="board-heading">
-          <span>PLAYING FIELD</span>
-          <span id="gameStatus" class="status">READY</span>
+  <main>
+    <section class="hero section-wrap" id="home">
+      <div class="hero-copy">
+        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE <span class="pill-divider"></span> SEASON 01</div>
+        <p class="eyebrow">A NEW KIND OF CLASSIC</p>
+        <h1>DROP INTO<br><span>ANOTHER</span><br>DIMENSION<span class="hero-period">.</span></h1>
+        <p class="hero-description">A familiar puzzle. An unreal atmosphere. Stack smart, chase the perfect run, and own the grid in a next-gen arcade experience.</p>
+        <div class="hero-actions">
+          <a href="#play" class="button button-primary" id="heroPlay">PLAY NOW <span>↗</span></a>
+          <a href="#features" class="text-link">EXPLORE THE EXPERIENCE <span>↓</span></a>
         </div>
+        <div class="hero-proof">
+          <div class="proof-avatars"><span>BD</span><span>PX</span><span>GG</span></div>
+          <div><strong>PURE SKILL. ZERO LIMITS.</strong><small>Built for one more round.</small></div>
+        </div>
+      </div>
+      <div class="hero-art" aria-label="Abstract neon arcade illustration">
+        <div class="art-orbit orbit-a"></div><div class="art-orbit orbit-b"></div>
+        <div class="art-grid"></div>
+        <div class="art-label label-top"><span>FIG. 001</span><b>THE DROP ENGINE</b></div>
+        <div class="floating-chip chip-a">+ 240 <small>COMBO XP</small></div>
+        <div class="floating-chip chip-b"><span class="live-dot"></span> LIVE SYSTEM <small>READY TO PLAY</small></div>
+        <div class="cube-stack">
+          <div class="cube cube-back"><i></i><i></i><i></i></div>
+          <div class="cube cube-mid"><i></i><i></i><i></i></div>
+          <div class="cube cube-front"><i></i><i></i><i></i></div>
+          <div class="cube cube-pink"><i></i><i></i><i></i></div>
+          <div class="cube cube-gold"><i></i><i></i><i></i></div>
+        </div>
+        <div class="art-label label-bottom"><span>GEOMETRY / CONTROL</span><b>FIND YOUR FLOW</b></div>
+        <div class="art-cross cross-a">+</div><div class="art-cross cross-b">+</div>
+      </div>
+      <div class="hero-bottomline"><span>DESIGNED TO KEEP YOU IN THE ZONE</span><span>SCROLL TO ENTER <b>↓</b></span></div>
+    </section>
 
-        <div class="canvas-wrap">
-          <canvas id="gameCanvas" width="300" height="600"
-            aria-label="Blockdrop game board"></canvas>
+    <section class="ticker" aria-label="Game highlights"><div class="ticker-track"><span>THINK FAST</span><b>✳</b><span>STACK SMART</span><b>✳</b><span>BREAK THE GRID</span><b>✳</b><span>CHASE THE HIGH SCORE</span><b>✳</b><span>THINK FAST</span><b>✳</b><span>STACK SMART</span><b>✳</b><span>BREAK THE GRID</span><b>✳</b><span>CHASE THE HIGH SCORE</span><b>✳</b></div></section>
 
-          <div id="overlay" class="overlay">
-            <div class="overlay-card">
-              <div class="overlay-icon">▦</div>
-              <h2 id="overlayTitle">Ready to drop?</h2>
-              <p id="overlayMessage">Stack the blocks. Clear the lines.</p>
-              <button id="startBtn" class="primary-btn">START GAME</button>
+    <section class="play-section section-wrap" id="play">
+      <div class="section-heading">
+        <div><p class="eyebrow">01 / THE ARENA</p><h2>YOUR GRID.<br><span>YOUR RULES.</span></h2></div>
+        <p class="section-intro">Lock in, read the board, and make every move count. Your next personal best is one clean stack away.</p>
+      </div>
+      <div class="game-layout">
+        <aside class="game-sidebar">
+          <div class="glass-card player-card"><div class="card-topline"><span>PLAYER PROFILE</span><span class="tiny-dot"></span></div><div class="player-avatar">B<span>✦</span></div><h3>GRID RUNNER</h3><p>ROOKIE CLASS / LVL 01</p><div class="xp-line"><span>LEVEL PROGRESS</span><b id="xpLabel">0 / 500 XP</b></div><div class="xp-track"><i id="xpBar"></i></div></div>
+          <div class="glass-card stat-card"><div class="card-topline"><span>SESSION DATA</span><span>↗</span></div><div class="stat-grid"><div><small>BEST SCORE</small><strong id="bestScore">000000</strong></div><div><small>LINES CLEARED</small><strong id="totalLines">000</strong></div><div><small>GAMES PLAYED</small><strong id="gamesPlayed">00</strong></div><div><small>TOP LEVEL</small><strong id="topLevel">01</strong></div></div></div>
+          <div class="glass-card mode-card"><div class="card-topline"><span>GAME MODE</span><span>⌄</span></div><label for="difficulty">DIFFICULTY</label><select id="difficulty"><option value="chill">Chill</option><option value="classic" selected>Classic</option><option value="intense">Intense</option></select><p class="mode-hint" id="difficultyHint">The classic balance. Start stacking.</p></div>
+        </aside>
+
+        <div class="game-center">
+          <div class="game-frame">
+            <div class="game-frame-top"><div><span class="live-dot"></span> ARENA 01 <span class="frame-separator">/</span> ENDLESS</div><div id="gameState">STANDBY</div></div>
+            <div class="game-stage" id="gameStage">
+              <div class="stage-glow"></div>
+              <canvas id="gameCanvas" width="300" height="600" aria-label="Block puzzle game board"></canvas>
+              <div class="game-overlay" id="gameOverlay">
+                <div class="overlay-icon">◆</div><p class="eyebrow">ARENA IS READY</p><h3 id="overlayTitle">MAKE YOUR<br><span>FIRST DROP.</span></h3><p id="overlayText">Clear lines. Build combos. Beat your best.</p><button class="button button-primary" id="startButton">START GAME <span>↗</span></button>
+              </div>
             </div>
+            <div class="game-frame-bottom"><span><i class="keycap">←</i><i class="keycap">→</i> MOVE</span><span><i class="keycap">↑</i> ROTATE</span><span><i class="keycap">↓</i> DROP</span><span><i class="keycap">SPACE</i> HARD DROP</span></div>
           </div>
+          <div class="mobile-controls" aria-label="Touch game controls"><button data-control="left" aria-label="Move left">←</button><button data-control="rotate" aria-label="Rotate">↻</button><button data-control="right" aria-label="Move right">→</button><button data-control="down" aria-label="Soft drop">↓</button><button data-control="drop" aria-label="Hard drop">⇊</button></div>
         </div>
 
-        <div class="mobile-controls">
-          <button id="leftBtn" aria-label="Move left">←</button>
-          <button id="rotateBtn" aria-label="Rotate">↻</button>
-          <button id="rightBtn" aria-label="Move right">→</button>
-          <button id="downBtn" aria-label="Move down">↓</button>
-          <button id="dropBtn" aria-label="Hard drop">DROP</button>
-        </div>
-
-        <div class="game-actions">
-          <button id="pauseBtn" class="secondary-btn">Ⅱ Pause</button>
-          <button id="restartBtn" class="secondary-btn">↻ Restart</button>
-        </div>
+        <aside class="game-sidebar right-sidebar">
+          <div class="glass-card score-card"><div class="card-topline"><span>LIVE SCORE</span><span class="score-pulse"></span></div><strong class="score-value" id="score">000000</strong><div class="score-meta"><span>LEVEL <b id="level">01</b></span><span>LINES <b id="lines">000</b></span></div><div class="score-divider"></div><div class="next-title"><span>NEXT BLOCK</span><span>PREVIEW</span></div><canvas id="nextCanvas" width="120" height="100" aria-label="Next block preview"></canvas><div class="combo-meter"><span>COMBO CHAIN</span><strong id="combo">x0</strong><div class="combo-track"><i id="comboBar"></i></div></div></div>
+          <div class="glass-card action-card"><div class="card-topline"><span>QUICK ACTIONS</span><span>⌘</span></div><button class="action-button" id="pauseButton"><span>Ⅱ</span> PAUSE GAME <kbd>P</kbd></button><button class="action-button" id="restartButton"><span>↻</span> RESTART RUN <kbd>R</kbd></button><button class="action-button" id="soundGameButton"><span>♫</span> SOUND <kbd>M</kbd></button></div>
+          <div class="tip-card"><span class="tip-icon">✦</span><div><b>PRO TIP</b><p>Keep your stack flat. A clean surface creates more options.</p></div></div>
+        </aside>
       </div>
-
-      <aside class="sidebar">
-        <section class="panel stat-grid">
-          <div class="stat">
-            <span>SCORE</span>
-            <strong id="score">0</strong>
-          </div>
-          <div class="stat">
-            <span>LINES</span>
-            <strong id="lines">0</strong>
-          </div>
-          <div class="stat">
-            <span>LEVEL</span>
-            <strong id="level">1</strong>
-          </div>
-          <div class="stat">
-            <span>TIME</span>
-            <strong id="time">00:00</strong>
-          </div>
-        </section>
-
-        <section class="panel preview-panel">
-          <div class="section-heading">NEXT BLOCK</div>
-          <canvas id="nextCanvas" width="160" height="120"></canvas>
-        </section>
-
-        <section class="panel preview-panel">
-          <div class="section-heading">CONTROLS</div>
-          <div class="key-row"><kbd>←</kbd><kbd>→</kbd><span>Move</span></div>
-          <div class="key-row"><kbd>↑</kbd><span>Rotate</span></div>
-          <div class="key-row"><kbd>↓</kbd><span>Soft drop</span></div>
-          <div class="key-row"><kbd>Space</kbd><span>Hard drop</span></div>
-          <div class="key-row"><kbd>P</kbd><span>Pause</span></div>
-        </section>
-      </aside>
+      <p class="game-footnote"><span class="live-dot"></span> YOUR PROGRESS IS SAVED LOCALLY ON THIS DEVICE</p>
     </section>
 
-    <section class="panel audio-panel">
-      <div>
-        <p class="eyebrow">PERSONALIZE YOUR GAME</p>
-        <h2>Audio Settings</h2>
-        <p class="muted">Customize your gameplay sound.</p>
-      </div>
-      <div class="audio-controls">
-        <button id="soundToggle" class="secondary-btn">🔊 Sound: ON</button>
-        <button id="musicToggle" class="secondary-btn">🎵 Music: OFF</button>
-      </div>
-      <p id="audioStatus" class="muted audio-status" aria-live="polite">
-        Sound effects enabled. Music is off.
-      </p>
-    </section>
-
-    <section class="dashboard">
-      <div class="panel">
-        <div class="section-heading">ACHIEVEMENTS</div>
-        <div id="achievements" class="achievement-list"></div>
-      </div>
-
-      <div class="panel">
-        <div class="section-heading">LOCAL LEADERBOARD</div>
-        <div class="player-entry">
-          <input id="playerName" maxlength="18" placeholder="Enter player name" />
-          <button id="saveNameBtn" class="secondary-btn">Save</button>
-        </div>
-        <div id="leaderboard" class="leaderboard-list"></div>
-        <button id="clearLeaderboardBtn" class="text-btn">Clear leaderboard</button>
+    <section class="features-section section-wrap" id="features">
+      <div class="section-heading"><div><p class="eyebrow">02 / THE EXPERIENCE</p><h2>MORE THAN<br><span>JUST BLOCKS.</span></h2></div><p class="section-intro">A classic puzzle rebuilt with a cinematic interface, reactive feedback, and a little extra attitude.</p></div>
+      <div class="feature-grid">
+        <article class="feature-card feature-large"><div class="feature-number">01 — FEEL THE DROP</div><div class="feature-art feature-art-red"><div class="mini-block mini-block-one"></div><div class="mini-block mini-block-two"></div><div class="mini-block mini-block-three"></div><span class="feature-orbit"></span></div><h3>TACTILE FEEDBACK</h3><p>Impact flashes, layered depth, and motion that makes every line clear feel satisfying.</p></article>
+        <article class="feature-card"><div class="feature-number">02 — FIND YOUR RHYTHM</div><div class="feature-art feature-art-gold"><div class="orbit-ring"></div><div class="orbit-core">✦</div><span class="orbit-dot"></span></div><h3>CHASE THE COMBO</h3><p>Track your score, clear lines, and push your personal best a little further.</p></article>
+        <article class="feature-card"><div class="feature-number">03 — MAKE IT YOURS</div><div class="feature-art feature-art-pink"><div class="theme-swatch swatch-a"></div><div class="theme-swatch swatch-b"></div><div class="theme-swatch swatch-c"></div><div class="theme-swatch swatch-d"></div></div><h3>TWO MOODS. ONE ARENA.</h3><p>Switch between Crimson Noir and a Royal Gold & Pink light theme.</p></article>
       </div>
     </section>
 
-    <footer>
-      BLOCKDROP <span>·</span> BUILT TO PLAY
-    </footer>
-    
-<!-- COMMIT 13: PLAYER STATISTICS DASHBOARD -->
-<section class="stats-dashboard panel">
-  <div class="stats-header">
-    <div>
-      <p class="eyebrow">PLAYER ANALYTICS</p>
-      <h2>Statistics Dashboard</h2>
-      <p class="muted">Your BLOCKDROP journey at a glance.</p>
-    </div>
-    <span class="stats-live">● TRACKING</span>
-  </div>
+    <section class="how-section section-wrap" id="how">
+      <div class="how-banner"><div><p class="eyebrow">03 / GET IN THE FLOW</p><h2>THINK AHEAD.<br><span>DROP WITH INTENT.</span></h2><p>Simple controls. Endless ways to improve. Find the rhythm that works for you.</p></div><a href="#play" class="button button-primary">ENTER THE ARENA <span>↗</span></a><div class="banner-orb"></div></div>
+      <div class="steps-grid"><div><span>01</span><h3>MOVE</h3><p>Position each block to build a strong foundation.</p></div><div><span>02</span><h3>ROTATE</h3><p>Find the best fit before your stack gets too high.</p></div><div><span>03</span><h3>CLEAR</h3><p>Complete a horizontal line to clear space and score.</p></div><div><span>04</span><h3>REPEAT</h3><p>Stay calm, adapt quickly, and chase a new high score.</p></div></div>
+    </section>
+  </main>
 
-  <div class="stats-cards">
-    <article class="analytics-card">
-      <span class="analytics-icon">🎮</span>
-      <span class="analytics-label">GAMES PLAYED</span>
-      <strong id="totalGames">0</strong>
-    </article>
-
-    <article class="analytics-card">
-      <span class="analytics-icon">✦</span>
-      <span class="analytics-label">HIGHEST SCORE</span>
-      <strong id="lifetimeBest">0</strong>
-    </article>
-
-    <article class="analytics-card">
-      <span class="analytics-icon">▦</span>
-      <span class="analytics-label">LINES CLEARED</span>
-      <strong id="totalLines">0</strong>
-    </article>
-
-    <article class="analytics-card">
-      <span class="analytics-icon">↗</span>
-      <span class="analytics-label">AVERAGE SCORE</span>
-      <strong id="averageScore">0</strong>
-    </article>
-  </div>
-
-  <div class="progress-section">
-    <div class="progress-heading">
-      <div>
-        <span class="analytics-label">NEXT MILESTONE</span>
-        <h3 id="milestoneTitle">Score Hunter</h3>
-      </div>
-      <strong id="milestoneProgress">0 / 1000</strong>
-    </div>
-
-    <div class="progress-track">
-      <div id="milestoneBar" class="progress-fill"></div>
-    </div>
-
-    <p id="milestoneMessage" class="muted">
-      Score 1,000 points in a game to reach your first milestone.
-    </p>
-  </div>
-
-  <div class="stats-footer">
-    <span>Personal best across completed games</span>
-    <button id="refreshStatsBtn" class="secondary-btn" type="button">
-      ↻ Refresh Stats
-    </button>
-  </div>
-</section>
-<!-- END COMMIT 13 -->
-<section class="daily-challenges" id="dailyChallenges">
-  <div class="daily-header">
-    <div>
-      <p class="daily-eyebrow">YOUR NEXT MISSION</p>
-      <h2>Daily Challenges</h2>
-      <p class="daily-subtitle">Complete missions to earn bonus XP.</p>
-    </div>
-    <div class="daily-date" id="dailyDate">TODAY</div>
-  </div>
-
-  <div class="daily-xp-card">
-    <div>
-      <span>Total Challenge XP</span>
-      <strong id="dailyTotalXP">0 XP</strong>
-    </div>
-    <span class="daily-trophy">🏆</span>
-  </div>
-
-  <div class="daily-challenge-list">
-    <article class="daily-challenge-card" id="challengeScore">
-      <div class="challenge-icon">🎯</div>
-      <div class="challenge-info">
-        <h3>Score Hunter</h3>
-        <p>Earn 2,500 total points today.</p>
-        <div class="challenge-progress-track">
-          <div class="challenge-progress-fill" id="scoreProgressBar"></div>
-        </div>
-        <small id="scoreProgressText">0 / 2,500 points</small>
-      </div>
-      <div class="challenge-reward">
-        <span>+100 XP</span>
-        <button id="claimScoreReward" disabled>Locked</button>
-      </div>
-    </article>
-
-    <article class="daily-challenge-card" id="challengeLines">
-      <div class="challenge-icon">🧱</div>
-      <div class="challenge-info">
-        <h3>Line Master</h3>
-        <p>Clear 10 lines today.</p>
-        <div class="challenge-progress-track">
-          <div class="challenge-progress-fill" id="linesProgressBar"></div>
-        </div>
-        <small id="linesProgressText">0 / 10 lines</small>
-      </div>
-      <div class="challenge-reward">
-        <span>+150 XP</span>
-        <button id="claimLinesReward" disabled>Locked</button>
-      </div>
-    </article>
-
-    <article class="daily-challenge-card" id="challengeGames">
-      <div class="challenge-icon">🎮</div>
-      <div class="challenge-info">
-        <h3>Dedicated Player</h3>
-        <p>Complete 3 games today.</p>
-        <div class="challenge-progress-track">
-          <div class="challenge-progress-fill" id="gamesProgressBar"></div>
-        </div>
-        <small id="gamesProgressText">0 / 3 games</small>
-      </div>
-      <div class="challenge-reward">
-        <span>+200 XP</span>
-        <button id="claimGamesReward" disabled>Locked</button>
-      </div>
-    </article>
-  </div>
-</section>
-
-<!-- COMMIT 15: POWER-UP CONTROLS -->
-<section class="powerup-panel" id="powerupPanel">
-  <div class="powerup-heading">
-    <div>
-      <p class="powerup-eyebrow">SPECIAL ABILITIES</p>
-      <h2>Power-Ups</h2>
-    </div>
-    <span class="powerup-badge">3 POWERS</span>
-  </div>
-
-  <p class="powerup-description">
-    Activate special abilities during your game.
-  </p>
-
-  <div class="powerup-grid">
-    <button class="powerup-card" id="bombPower" type="button">
-      <span class="powerup-icon">💣</span>
-      <span class="powerup-name">Bomb Blast</span>
-      <span class="powerup-detail">Clear nearby blocks</span>
-      <span class="powerup-count" id="bombCount">2 available</span>
-    </button>
-
-    <button class="powerup-card" id="linePower" type="button">
-      <span class="powerup-icon">⚡</span>
-      <span class="powerup-name">Line Clear</span>
-      <span class="powerup-detail">Clear the lowest row</span>
-      <span class="powerup-count" id="lineCount">2 available</span>
-    </button>
-
-    <button class="powerup-card" id="freezePower" type="button">
-      <span class="powerup-icon">❄️</span>
-      <span class="powerup-name">Freeze Time</span>
-      <span class="powerup-detail">Slow falling blocks</span>
-      <span class="powerup-count" id="freezeCount">2 available</span>
-    </button>
-  </div>
-
-  <p class="powerup-status" id="powerupStatus" aria-live="polite">
-    Choose a power-up to activate it.
-  </p>
-</section>
-
-<!-- COMMIT 16: COMBO & STREAK SYSTEM -->
-<section class="combo-panel" id="comboPanel">
-  <div class="combo-header">
-    <div>
-      <p class="combo-eyebrow">KEEP THE MOMENTUM</p>
-      <h2>Combo System</h2>
-    </div>
-    <span class="combo-best" id="comboBest">BEST: 0x</span>
-  </div>
-
-  <div class="combo-arena" id="comboArena">
-    <div class="combo-flame" id="comboFlame">🔥</div>
-    <div class="combo-number" id="comboNumber">0x</div>
-    <div class="combo-label" id="comboLabel">START YOUR STREAK</div>
-    <div class="combo-message" id="comboMessage">
-      Clear consecutive lines to build your combo!
-    </div>
-  </div>
-
-  <div class="combo-stats">
-    <div class="combo-stat">
-      <span>Current streak</span>
-      <strong id="comboStreak">0</strong>
-    </div>
-    <div class="combo-stat">
-      <span>Bonus points</span>
-      <strong id="comboBonus">0</strong>
-    </div>
-    <div class="combo-stat">
-      <span>Lines in streak</span>
-      <strong id="comboLines">0</strong>
-    </div>
-  </div>
-
-  <div class="combo-progress-track">
-    <div class="combo-progress-fill" id="comboProgress"></div>
-  </div>
-  <p class="combo-hint" id="comboHint">
-    Clear a line to start your streak.
-  </p>
-</section>
-
-<!-- COMMIT 17: THEMES & CUSTOMIZATION -->
-<section class="theme-panel" id="themePanel">
-  <div class="theme-header">
-    <div>
-      <p class="theme-eyebrow">MAKE IT YOURS</p>
-      <h2>Game Appearance</h2>
-      <p class="theme-subtitle">Choose your BLOCKDROP atmosphere.</p>
-    </div>
-    <span class="theme-icon">🎨</span>
-  </div>
-
-  <div class="theme-grid">
-    <button class="theme-card active" data-theme="nebula" type="button">
-      <span class="theme-preview nebula-preview">
-        <i></i><i></i><i></i><i></i>
-      </span>
-      <strong>Nebula</strong>
-      <small>Cosmic purple</small>
-    </button>
-
-    <button class="theme-card" data-theme="matrix" type="button">
-      <span class="theme-preview matrix-preview">
-        <i></i><i></i><i></i><i></i>
-      </span>
-      <strong>Matrix</strong>
-      <small>Digital green</small>
-    </button>
-
-    <button class="theme-card" data-theme="sunset" type="button">
-      <span class="theme-preview sunset-preview">
-        <i></i><i></i><i></i><i></i>
-      </span>
-      <strong>Sunset</strong>
-      <small>Warm orange</small>
-    </button>
-
-    <button class="theme-card" data-theme="ice" type="button">
-      <span class="theme-preview ice-preview">
-        <i></i><i></i><i></i><i></i>
-      </span>
-      <strong>Arctic</strong>
-      <small>Frozen blue</small>
-    </button>
-  </div>
-
-  <div class="theme-settings">
-    <label class="theme-toggle">
-      <span>
-        <strong>Reduce motion</strong>
-        <small>Use calmer transitions and effects.</small>
-      </span>
-      <input type="checkbox" id="reduceMotionToggle">
-    </label>
-
-    <label class="theme-toggle">
-      <span>
-        <strong>Glow effects</strong>
-        <small>Enable decorative neon glow.</small>
-      </span>
-      <input type="checkbox" id="glowToggle" checked>
-    </label>
-
-    <label class="theme-color-setting" for="customAccent">
-      <span>
-        <strong>Custom accent</strong>
-        <small>Choose your own highlight color.</small>
-      </span>
-      <input type="color" id="customAccent" value="#8b7cff">
-    </label>
-
-    <button class="theme-reset" id="resetThemeSettings" type="button">
-      Reset appearance
-    </button>
-  </div>
-
-  <p class="theme-status" id="themeStatus" aria-live="polite">
-    Nebula theme selected.
-  </p>
-</section>
-
-<!-- COMMIT 18: ADVANCED VISUAL EFFECTS -->
-<section class="effects-panel" id="effectsPanel">
-  <div class="effects-header">
-    <div>
-      <p class="effects-eyebrow">NEXT-LEVEL GAMEPLAY</p>
-      <h2>Visual Effects</h2>
-      <p>Customize the action and intensity of your game.</p>
-    </div>
-    <span class="effects-icon">✨</span>
-  </div>
-
-  <div class="effects-options">
-    <label class="effects-option">
-      <span>
-        <strong>Particle bursts</strong>
-        <small>Colorful particles on line clears.</small>
-      </span>
-      <input id="particlesToggle" type="checkbox" checked>
-    </label>
-
-    <label class="effects-option">
-      <span>
-        <strong>Screen shake</strong>
-        <small>Subtle impact when clearing lines.</small>
-      </span>
-      <input id="shakeToggle" type="checkbox" checked>
-    </label>
-
-    <label class="effects-option">
-      <span>
-        <strong>Floating score</strong>
-        <small>Animated bonus-point notifications.</small>
-      </span>
-      <input id="floatingScoreToggle" type="checkbox" checked>
-    </label>
-  </div>
-
-  <div class="effects-preview" id="effectsPreview">
-    <div class="effects-preview-content">
-      <span>BLOCKDROP</span>
-      <strong>READY TO PLAY?</strong>
-      <button id="previewEffectsBtn" type="button">Preview Effects</button>
-    </div>
-  </div>
-
-  <p class="effects-status" id="effectsStatus" aria-live="polite">
-    Visual effects enabled.
-  </p>
-</section>
-
-<!-- Floating effects appear here -->
-<div id="bdEffectsLayer" aria-hidden="true"></div>
-
-<!-- COMMIT 18: VISUAL EFFECTS SETTINGS -->
-<section class="fx-panel" id="fxPanel">
-  <div class="fx-header">
-    <div>
-      <p class="fx-eyebrow">NEXT-LEVEL GAMEPLAY</p>
-      <h2>Visual Effects</h2>
-      <p class="fx-subtitle">Customize your arcade experience.</p>
-    </div>
-    <span class="fx-icon">✨</span>
-  </div>
-
-  <div class="fx-options">
-    <label class="fx-option">
-      <span>
-        <strong>Particle bursts</strong>
-        <small>Animated particles on demand.</small>
-      </span>
-      <input type="checkbox" id="fxParticles" checked>
-    </label>
-
-    <label class="fx-option">
-      <span>
-        <strong>Screen shake</strong>
-        <small>Subtle impact feedback.</small>
-      </span>
-      <input type="checkbox" id="fxShake" checked>
-    </label>
-
-    <label class="fx-option">
-      <span>
-        <strong>Floating score</strong>
-        <small>Animated score notifications.</small>
-      </span>
-      <input type="checkbox" id="fxFloatingScore" checked>
-    </label>
-  </div>
-
-  <div class="fx-actions">
-    <button type="button" id="fxPreviewButton">Preview Effects ✨</button>
-    <button type="button" id="fxResetButton">Reset</button>
-  </div>
-
-  <div class="fx-stage" id="fxStage" aria-live="polite">
-    <span class="fx-stage-label">EFFECTS PREVIEW</span>
-    <span class="fx-stage-message" id="fxStageMessage">
-      Your arcade effects are ready.
-    </span>
-  </div>
-</section>
-
-</main>
-
-<!-- BLOCKDROP COMMIT 19: SETTINGS & ACCESSIBILITY -->
-<section class="settings-panel" id="accessibilitySettings" aria-labelledby="settingsTitle">
-  <div class="settings-header">
-    <div>
-      <span class="settings-eyebrow">PERSONALIZE YOUR GAME</span>
-      <h2 id="settingsTitle">Settings & Accessibility</h2>
-      <p>Make BLOCKDROP comfortable for you to play.</p>
-    </div>
-    <button type="button" id="settingsClose" class="settings-close" aria-label="Close settings">×</button>
-  </div>
-
-  <div class="settings-list">
-    <label class="setting-row" for="settingSound">
-      <span>
-        <strong>Sound effects</strong>
-        <small>Enable or disable game audio preferences.</small>
-      </span>
-      <input type="checkbox" id="settingSound" checked>
-    </label>
-
-    <label class="setting-row" for="settingHighContrast">
-      <span>
-        <strong>High contrast</strong>
-        <small>Increase contrast for clearer game elements.</small>
-      </span>
-      <input type="checkbox" id="settingHighContrast">
-    </label>
-
-    <label class="setting-row" for="settingLargeText">
-      <span>
-        <strong>Larger text</strong>
-        <small>Make interface text easier to read.</small>
-      </span>
-      <input type="checkbox" id="settingLargeText">
-    </label>
-
-    <label class="setting-row" for="settingReducedMotion">
-      <span>
-        <strong>Reduce motion</strong>
-        <small>Reduce decorative movement and animations.</small>
-      </span>
-      <input type="checkbox" id="settingReducedMotion">
-    </label>
-  </div>
-
-  <div class="settings-footer">
-    <span id="settingsSaveStatus" role="status" aria-live="polite">Your preferences are saved on this device.</span>
-    <button type="button" id="settingsReset" class="settings-reset">Reset settings</button>
-  </div>
-</section>
-
-<button
-  type="button"
-  id="settingsOpen"
-  class="settings-open"
-  aria-controls="accessibilitySettings"
-  aria-expanded="false"
->
-  ⚙ Settings
-</button>
-
+  <footer class="footer section-wrap"><a class="brand footer-brand" href="#home"><span class="brand-cube"><i></i><i></i><i></i><i></i></span><span>BLOCK<span>DROP</span><small>ARCADE / 001</small></span></a><p>BUILT FOR THE LOVE OF ONE MORE ROUND.</p><span>© <span id="year"></span> BLOCKDROP / KEEP STACKING.</span></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
